@@ -1,0 +1,41 @@
+﻿using Core.Concretes.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+namespace Data.Contexts
+{
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Follower> Followers { get; set; }
+        public DbSet<PostLike> PostLikes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            //Kompozit birincil anahtar oluşturur.İki sütunun durumunun aynı anda tekil olması olayıdır.
+            builder.Entity<Follower>()
+                   .HasKey(f => new { f.FollowerMemberId, f.FollowedMemberId });
+
+            //Bir tablo başka bir tablonun iki ayrı primary key yapısına ayrı ayrı foreignkey bağlantısı aşağıdaki gibi bir fluent api kullanmadan bağlanamaz.
+            builder.Entity<Follower>()
+                   .HasOne(f => f.FollowerMember)
+                   .WithMany(u => u.Following)
+                   .HasForeignKey(f => f.FollowerMemberId)
+                   .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Follower>()
+                   .HasOne(f => f.FollowedMember)
+                   .WithMany(u => u.Followers)
+                   .HasForeignKey(f => f.FollowedMemberId)
+                   .OnDelete(DeleteBehavior.NoAction);
+        }
+    }
+}
