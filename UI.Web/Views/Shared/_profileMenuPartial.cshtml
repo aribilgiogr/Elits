@@ -1,0 +1,24 @@
+﻿@using Core.Concretes.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
+@{
+    var profile = await userManager.GetUserAsync(User);
+}
+
+<div class="dropdown">
+    <img src="@(profile?.ProfilePictureUrl??"/img/avocado.png")"
+         class="rounded-circle dropdown-toggle shadow-sm border"
+         width="64"
+         height="64"
+         data-bs-toggle="dropdown" />
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+        <li><a class="dropdown-item" asp-controller="account" asp-action="index">My Profile</a></li>
+        <li><a class="dropdown-item" asp-controller="account" asp-action="resetpassword">Reset Password</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <form asp-controller="account" asp-action="logout" method="post">
+                <button class="dropdown-item btn" type="submit">Logout</button>
+            </form>
+        </li>
+    </ul>
+</div>

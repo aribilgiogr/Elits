@@ -11,6 +11,7 @@ builder.Services.AddAutoMapper(opt =>
 {
     opt.AddProfile<MappingProfile>();
     opt.AddProfile<AccountViewModelProfile>();
+    opt.AddProfile<HomeViewModelProfile>();
 });
 
 builder.Services.AddDatabaseConnections(builder.Configuration);

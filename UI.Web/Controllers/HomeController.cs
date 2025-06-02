@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using UI.Web.Models;
+using UI.Web.Models.Home;
 
 namespace UI.Web.Controllers
 {
@@ -19,7 +20,11 @@ namespace UI.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await service.GetAllAsync());
+            var model = new HomeViewModel
+            {
+                Posts = await service.GetAllAsync()
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()
