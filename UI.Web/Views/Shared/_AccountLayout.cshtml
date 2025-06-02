@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/UI.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mx-auto">
+                <div class="card bg-light bg-gradient shadow">
+                    <div class="card-body">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

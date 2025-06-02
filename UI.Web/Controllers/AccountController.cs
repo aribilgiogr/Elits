@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Concretes.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UI.Web.Models.Account;
@@ -21,19 +22,17 @@ namespace UI.Web.Controllers
             this.env = env;
         }
 
-
-
         #region Member Profile:
-
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await userManager.GetUserAsync(User));
         }
 
         #endregion
 
         #region Login
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -41,6 +40,7 @@ namespace UI.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
@@ -70,14 +70,14 @@ namespace UI.Web.Controllers
         #endregion
 
         #region Register
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
@@ -110,10 +110,11 @@ namespace UI.Web.Controllers
         #endregion
 
         #region Reset Forgotten Password
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ForgotPassword() => View();
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -121,25 +122,29 @@ namespace UI.Web.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ResetPassword() => View();
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             return View(model);
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ResetPasswordConfirmation() => View();
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult AccessDenied() => View();
 
         #endregion
 
         #region Logout
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();

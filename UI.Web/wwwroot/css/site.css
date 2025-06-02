@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.required-label::before {
+    content: "*";
+    color: red;
+    margin-right: 4px;
+}

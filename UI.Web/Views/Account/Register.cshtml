@@ -1,0 +1,62 @@
+﻿@model UI.Web.Models.Account.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<h1>Register</h1>
+<small class="text-muted">
+    Please fill in the form below to create a new account. If you already have an account, you can <a asp-action="Login">log in here</a>. If you forgot your password, you can <a asp-action="ForgotPassword">reset it</a>.
+</small>
+<hr />
+<form asp-action="Register" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-floating mb-3">
+        <input asp-for="Email" class="form-control rounded-pill" />
+        <label asp-for="Email" class="control-label required-label"></label>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="UserName" class="form-control rounded-pill" />
+        <label asp-for="UserName" class="control-label required-label"></label>
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="Password" class="form-control rounded-pill" />
+        <label asp-for="Password" class="control-label required-label"></label>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="ConfirmPassword" class="form-control rounded-pill" />
+        <label asp-for="ConfirmPassword" class="control-label required-label"></label>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="FirstName" class="form-control rounded-pill" />
+        <label asp-for="FirstName" class="control-label"></label>
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="LastName" class="form-control rounded-pill" />
+        <label asp-for="LastName" class="control-label"></label>
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <textarea asp-for="Bio" class="form-control rounded-3"></textarea>
+        <label asp-for="Bio" class="control-label"></label>
+        <span asp-validation-for="Bio" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="ProfilePicture" class="control-label"></label>
+        <input asp-for="ProfilePicture" type="file" class="form-control rounded-pill" />
+        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Register" class="btn btn-outline-dark btn-sm w-100 rounded-pill" />
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
