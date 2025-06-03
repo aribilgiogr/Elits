@@ -1,8 +1,64 @@
-﻿@{
+﻿@using Core.Abstracts.IServices
+@using Core.Concretes.Entities
+@using Microsoft.AspNetCore.Identity
+@using UI.Web.Models.Home
+@inject IPostLikeService likeService
+@inject SignInManager<ApplicationUser> signInManager
+@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
+    var userId = Guid.Parse(signInManager.UserManager.GetUserId(User)!);
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <partial name="_NewPostFormPartial" model="new NewPostViewModel()" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        @foreach (var item in Model.Posts.OrderByDescending(x => x.CreatedAt))
+        {
+            <div class="card border-0 border-bottom mb-3">
+                <div class="card-body">
+                    <h5>
+                        <img src="@(item.MemberProfilePictureUrl??"/img/avocado.png")" class="rounded-circle" style="width: 32px; height: 32px;" alt="@item.MemberUserName" />
+                        @@@item.MemberUserName
+                    </h5>
+                    <p>@item.Content</p>
+                    @if (item.AttachedImageUrl != null)
+                    {
+                        <img src="@item.AttachedImageUrl" class="img-fluid" alt="@item.Content" />
+                    }
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">
+                            <i class="fa-regular fa-clock"></i>
+                            @item.CreatedAt.ToLongDateString()
+                            @item.CreatedAt.ToLongTimeString()
+                        </small>
+                        <small class="text-muted">
+                            @if (!item.MemberId.Equals(userId))
+                            {
+                                if (await likeService.IsLikedByUserAsync(item.Id, userId))
+                                {
+                                    <i class="fa-solid fa-heart text-danger"></i>
+                                }
+                                else
+                                {
+                                    <a class="fa-regular fa-heart text-decoration-none text-danger" asp-action="like" asp-route-postId="@item.Id"></a>
+                                }
+                            }
+                            else
+                            {
+                                <i class="fa-regular fa-heart text-danger"></i>
+                            }
+                            @item.LikeCount
+                            | <i class="fa-solid fa-comment text-success"></i> @item.CommentCount
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
 </div>

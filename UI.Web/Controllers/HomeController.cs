@@ -1,5 +1,10 @@
+using AutoMapper;
 using Core.Abstracts.IServices;
+using Core.Concretes.DTOs.Post;
+using Core.Concretes.DTOs.PostLike;
+using Core.Concretes.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using UI.Web.Models;
@@ -10,12 +15,17 @@ namespace UI.Web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IPostService service;
-        public HomeController(ILogger<HomeController> logger, IPostService service)
+        private readonly IPostLikeService likeService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+
+        public HomeController(IPostService service, IMapper mapper, UserManager<ApplicationUser> userManager, IPostLikeService likeService)
         {
             this.service = service;
-            _logger = logger;
+            _mapper = mapper;
+            _userManager = userManager;
+            this.likeService = likeService;
         }
 
         public async Task<IActionResult> Index()
@@ -27,6 +37,37 @@ namespace UI.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(NewPostViewModel model)
+        {
+            model.MemberId = (await _userManager.GetUserAsync(User))!.Id;
+            if (model.AttachedImage != null)
+            {
+                // Save the image to a directory and set the URL
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.AttachedImage.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.AttachedImage.CopyToAsync(fileStream);
+                }
+
+                model.AttachedImageUrl = $"/uploads/{uniqueFileName}";
+            }
+
+            if (!ModelState.IsValid) return RedirectToAction(nameof(Index));
+
+            var post = _mapper.Map<CreatePostDto>(model);
+            await service.CreateAsync(post);
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -36,6 +77,19 @@ namespace UI.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> Like(string postId)
+        {
+            var userId = _userManager.GetUserId(User)!;
+
+            var likeDto = new CreatePostLikeDto
+            {
+                PostId = Guid.Parse(postId),
+                MemberId = Guid.Parse(userId)
+            };
+            await likeService.CreateAsync(likeDto);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -13,7 +13,10 @@ namespace Core.Concretes.Maps
         {
             #region Post
             // ReverseMap: Post -> PostDto ve PostDto -> Post haritalamasını yapar.
-            CreateMap<Post, PostDto>().ReverseMap();
+            CreateMap<Post, PostDto>()
+                .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.Comments.Count))
+                .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.Likes.Count))
+                .ReverseMap();
             CreateMap<CreatePostDto, Post>();
             CreateMap<UpdatePostDto, Post>();
             #endregion

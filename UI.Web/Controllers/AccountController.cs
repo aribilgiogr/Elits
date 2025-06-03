@@ -83,14 +83,29 @@ namespace UI.Web.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (!ModelState.IsValid) return View(model);
-
-            var user = mapper.Map<ApplicationUser>(model);
 
             if (model.ProfilePicture != null)
             {
                 // Buraya resim yükleme gelecek.
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "avatars");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfilePicture.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ProfilePicture.CopyToAsync(fileStream);
+                }
+
+                model.ProfilePictureUrl = $"/avatars/{uniqueFileName}";
             }
+
+            if (!ModelState.IsValid) return View(model);
+
+            var user = mapper.Map<ApplicationUser>(model);
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)

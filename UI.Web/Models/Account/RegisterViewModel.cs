@@ -29,6 +29,7 @@ namespace UI.Web.Models.Account
 
         [Display(Name = "Profile Picture", Prompt = "Profile Picture"), DataType(DataType.Upload)]
         public IFormFile? ProfilePicture { get; set; }
+        public string? ProfilePictureUrl { get; set; }
 
         #endregion
     }

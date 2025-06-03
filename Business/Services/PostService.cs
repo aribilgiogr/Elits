@@ -32,7 +32,7 @@ namespace Business.Services
 
         public async Task<IEnumerable<PostDto>> GetAllAsync()
         {
-            var posts = await unitOfWork.PostRepository.FindManyWithOrderedAsync(x => x.CreatedAt, false);
+            var posts = await unitOfWork.PostRepository.FindManyAsync(null, "Member", "Comments", "Likes");
             return mapper.Map<IEnumerable<PostDto>>(posts);
         }
 

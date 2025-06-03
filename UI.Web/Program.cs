@@ -4,15 +4,15 @@ using UI.Web.Models.Maps;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
 builder.Services.AddAutoMapper(opt =>
 {
     opt.AddProfile<MappingProfile>();
     opt.AddProfile<AccountViewModelProfile>();
     opt.AddProfile<HomeViewModelProfile>();
 });
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddDatabaseConnections(builder.Configuration);
 builder.Services.AddDTOServices();
