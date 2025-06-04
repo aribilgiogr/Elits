@@ -16,9 +16,7 @@
         <li><a class="dropdown-item" asp-controller="account" asp-action="resetpassword">Reset Password</a></li>
         <li><hr class="dropdown-divider"></li>
         <li>
-            <form asp-controller="account" asp-action="logout" method="post">
-                <button class="dropdown-item btn" type="submit">Logout</button>
-            </form>
+            <button class="dropdown-item btn" data-bs-toggle="modal" data-bs-target="#logoutModal" type="button">Logout</button>
         </li>
     </ul>
 </div>

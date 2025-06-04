@@ -31,7 +31,7 @@ namespace Business.Services
 
         public async Task<IEnumerable<CommentDto>> GetByPostIdAsync(Guid postId)
         {
-            var comments = await unitOfWork.CommentRepository.FindManyWithOrderedAsync(x => x.CreatedAt, false, x => x.PostId.Equals(postId));
+            var comments = await unitOfWork.CommentRepository.FindManyAsync(x => x.PostId.Equals(postId), "Member");
             return mapper.Map<IEnumerable<CommentDto>>(comments);
         }
 

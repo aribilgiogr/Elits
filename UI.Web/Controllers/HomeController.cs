@@ -1,5 +1,6 @@
 using AutoMapper;
 using Core.Abstracts.IServices;
+using Core.Concretes.DTOs.Comment;
 using Core.Concretes.DTOs.Post;
 using Core.Concretes.DTOs.PostLike;
 using Core.Concretes.Entities;
@@ -17,15 +18,17 @@ namespace UI.Web.Controllers
     {
         private readonly IPostService service;
         private readonly IPostLikeService likeService;
+        private readonly ICommentService commentService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public HomeController(IPostService service, IMapper mapper, UserManager<ApplicationUser> userManager, IPostLikeService likeService)
+        public HomeController(IPostService service, IMapper mapper, UserManager<ApplicationUser> userManager, IPostLikeService likeService, ICommentService commentService)
         {
             this.service = service;
             _mapper = mapper;
             _userManager = userManager;
             this.likeService = likeService;
+            this.commentService = commentService;
         }
 
         public async Task<IActionResult> Index()
@@ -89,6 +92,22 @@ namespace UI.Web.Controllers
                 MemberId = Guid.Parse(userId)
             };
             await likeService.CreateAsync(likeDto);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Comment(string postId, string commentContent)
+        {
+            var comment = new CreateCommentDto
+            {
+                PostId = Guid.Parse(postId),
+                Content = commentContent,
+                MemberId = (await _userManager.GetUserAsync(User))!.Id
+            };
+            if (ModelState.IsValid)
+            {
+                await commentService.CreateAsync(comment);
+            }
             return RedirectToAction(nameof(Index));
         }
     }

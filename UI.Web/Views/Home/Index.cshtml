@@ -53,8 +53,25 @@
                                 <i class="fa-regular fa-heart text-danger"></i>
                             }
                             @item.LikeCount
-                            | <i class="fa-solid fa-comment text-success"></i> @item.CommentCount
+                            |
+                            <button class="btn" data-bs-toggle="collapse" data-bs-target="#commentCollapse">
+                                <i class="fa-solid fa-comment text-success"></i> @item.CommentCount
+                            </button>
                         </small>
+                    </div>
+                    <div class="collapse" id="commentCollapse">
+                        @foreach (var comment in item.Comments)
+                        {
+                            <div class="card card-body border-0 border-bottom mb-3">
+                                <h6>
+                                    <img src="@(comment.MemberProfilePictureUrl??"/img/avocado.png")" class="rounded-circle" style="width: 24px; height: 24px;" alt="@comment.MemberUserName" />
+                                    @@@comment.MemberUserName
+                                </h6>
+                                <small>@comment.Content</small>
+                                <small class="text-muted">@comment.CreatedAt.ToLongDateString() @comment.CreatedAt.ToLongTimeString()</small>
+                            </div>
+                        }
+                        <button class="btn btn-outline-dark w-100" data-bs-toggle="modal" data-bs-target="#commentModal" data-post-id="@item.Id">Submit New Comment</button>
                     </div>
                 </div>
 
