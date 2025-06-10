@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Core.Concretes.DTOs.Comment;
+using Core.Concretes.DTOs.DirectMessage;
 using Core.Concretes.DTOs.Follower;
+using Core.Concretes.DTOs.Notification;
 using Core.Concretes.DTOs.Post;
 using Core.Concretes.DTOs.PostLike;
 using Core.Concretes.Entities;
@@ -35,6 +37,16 @@ namespace Core.Concretes.Maps
             #region Follower
             CreateMap<Follower, FollowerDto>();
             CreateMap<CreateFollowerDto, Follower>();
+            #endregion
+
+            #region DirectMessage
+            CreateMap<DirectMessage, DirectMessageDTO>();
+            CreateMap<CreateDirectMessageDTO, DirectMessage>();
+            #endregion
+
+            #region Notification
+            CreateMap<CreateNotificationDTO, Notification>();
+            CreateMap<Notification, NotificationDTO>();
             #endregion
         }
     }

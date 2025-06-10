@@ -1,6 +1,7 @@
 using AutoMapper;
 using Core.Abstracts.IServices;
 using Core.Concretes.DTOs.Comment;
+using Core.Concretes.DTOs.Notification;
 using Core.Concretes.DTOs.Post;
 using Core.Concretes.DTOs.PostLike;
 using Core.Concretes.Entities;
@@ -19,16 +20,19 @@ namespace UI.Web.Controllers
         private readonly IPostService service;
         private readonly IPostLikeService likeService;
         private readonly ICommentService commentService;
+        private readonly INotificationService notificationService;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public HomeController(IPostService service, IMapper mapper, UserManager<ApplicationUser> userManager, IPostLikeService likeService, ICommentService commentService)
+        public HomeController(IPostService service, IMapper mapper, UserManager<ApplicationUser> userManager, IPostLikeService likeService, ICommentService commentService, INotificationService notificationService)
         {
             this.service = service;
             _mapper = mapper;
             _userManager = userManager;
             this.likeService = likeService;
             this.commentService = commentService;
+            this.notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
@@ -85,19 +89,27 @@ namespace UI.Web.Controllers
         public async Task<IActionResult> Like(string postId)
         {
             var userId = _userManager.GetUserId(User)!;
-
+            var post = await service.GetByIdAsync(Guid.Parse(postId));
             var likeDto = new CreatePostLikeDto
             {
                 PostId = Guid.Parse(postId),
                 MemberId = Guid.Parse(userId)
             };
             await likeService.CreateAsync(likeDto);
+            var notification = new CreateNotificationDTO
+            {
+                MemberId = post.MemberId,
+                Message = "Your post has been liked.",
+                Type = "Like",
+                RelatedPostId = Guid.Parse(postId)
+            };
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> Comment(string postId, string commentContent)
         {
+            var post = await service.GetByIdAsync(Guid.Parse(postId));
             var comment = new CreateCommentDto
             {
                 PostId = Guid.Parse(postId),
@@ -107,6 +119,13 @@ namespace UI.Web.Controllers
             if (ModelState.IsValid)
             {
                 await commentService.CreateAsync(comment);
+                var notification = new CreateNotificationDTO
+                {
+                    MemberId = post.MemberId,
+                    Message = "Your post has a new comment.",
+                    Type = "Comment",
+                    RelatedPostId = Guid.Parse(postId)
+                };
             }
             return RedirectToAction(nameof(Index));
         }

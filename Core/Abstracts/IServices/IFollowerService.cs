@@ -10,4 +10,5 @@ namespace Core.Abstracts.IServices
         Task<IEnumerable<FollowerDto>> GetFollowingAsync(Guid memberId);
         Task<bool> IsFollowingAsync(CreateFollowerDto dto);
     }
+
 }

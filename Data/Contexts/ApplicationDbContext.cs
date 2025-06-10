@@ -15,6 +15,8 @@ namespace Data.Contexts
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Follower> Followers { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
+        public DbSet<DirectMessage> DirectMessages { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -32,6 +32,8 @@ namespace Business.Middlewares
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IPostLikeService, PostLikeService>();
             services.AddScoped<IFollowerService, FollowerService>();
+            services.AddScoped<IDirectMessageService, DirectMessageService>();
+            services.AddScoped<INotificationService, NotificationService>();
             return services;
         }
     }

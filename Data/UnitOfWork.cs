@@ -26,6 +26,12 @@ namespace Data
         private IFollowerRepository? followerRepository;
         public IFollowerRepository FollowerRepository => followerRepository ??= new FollowerRepository(context);
 
+        private IDirectMessageRepository? directMessageRepository;
+        public IDirectMessageRepository DirectMessageRepository => directMessageRepository ??= new DirectMessageRepository(context);
+
+        private INotificationRepository? notificationRepository;
+        public INotificationRepository NotificationRepository => notificationRepository ??= new NotificationRepository(context);
+
         public async Task CommitAsync()
         {
             try

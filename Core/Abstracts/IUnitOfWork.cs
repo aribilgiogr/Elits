@@ -8,6 +8,8 @@ namespace Core.Abstracts
         IPostRepository PostRepository { get; }
         IPostLikeRepository PostLikeRepository { get; }
         IFollowerRepository FollowerRepository { get; }
+        IDirectMessageRepository DirectMessageRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         Task CommitAsync();
     }
 }

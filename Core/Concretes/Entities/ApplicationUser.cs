@@ -15,5 +15,8 @@ namespace Core.Concretes.Entities
         public ICollection<PostLike> PostLikes { get; set; } = [];
         public ICollection<Follower> Following { get; set; } = [];
         public ICollection<Follower> Followers { get; set; } = [];
+        public ICollection<DirectMessage> SentMessages { get; set; } = [];
+        public ICollection<DirectMessage> ReceivedMessages { get; set; } = [];
+        public ICollection<Notification> Notifications { get; set; } = [];
     }
 }
