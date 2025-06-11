@@ -4,7 +4,35 @@
 @{
     var profile = await userManager.GetUserAsync(User);
 }
-
+<div class="dropdown">
+    <i class="fa-solid fa-bell fa-2x dropdown-toggle" data-bs-toggle="dropdown"></i>
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+        @if (profile?.Notifications != null && profile.Notifications.Any())
+        {
+            foreach (var notification in profile.Notifications)
+            {
+                <li>
+                    <div class="d-flex align-items-center">
+                        <strong>@notification.Type</strong>
+                        <span>@notification.Message</span>
+                    </div>
+                </li>
+            }
+        }
+        else
+        {
+            <li>
+                <a class="dropdown-item" href="#">No new notifications</a>
+            </li>
+        }
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li>
+            <a class="dropdown-item" href="#">View all notifications</a>
+        </li>
+    </ul>
+</div>
 <div class="dropdown">
     <img src="@(profile?.ProfilePictureUrl??"/img/avocado.png")"
          class="rounded-circle dropdown-toggle shadow-sm border"

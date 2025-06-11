@@ -20,6 +20,7 @@ namespace Business.Services
         public async Task CreateNotificationAsync(CreateNotificationDTO create)
         {
             await unitOfWork.NotificationRepository.CreateOneAsync(mapper.Map<Notification>(create));
+            await unitOfWork.CommitAsync();
         }
 
         public async Task<IEnumerable<NotificationDTO>> GetUserNotificationsAsync(Guid memberId)

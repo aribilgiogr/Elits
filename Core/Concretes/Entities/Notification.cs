@@ -6,7 +6,7 @@
         public required string Message { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public required Guid MemberId { get; set; } // Hedef kullanıcı
+        public Guid MemberId { get; set; } // Hedef kullanıcı
         public ApplicationUser? Member { get; set; }
 
         public bool IsRead { get; set; } = false;

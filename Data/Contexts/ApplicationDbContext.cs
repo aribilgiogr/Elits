@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Data.Contexts
 {
@@ -38,6 +39,31 @@ namespace Data.Contexts
                    .WithMany(u => u.Followers)
                    .HasForeignKey(f => f.FollowedMemberId)
                    .OnDelete(DeleteBehavior.NoAction);
+
+            // DirectMessage (Senders, Receivers) için bağlantıları (one2many) oluştur
+            builder.Entity<DirectMessage>()
+                   .HasOne(dm => dm.Sender)
+                   .WithMany(u => u.SentMessages)
+                   .HasForeignKey(dm => dm.SenderId)
+                   .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<DirectMessage>()
+                   .HasOne(dm => dm.Receiver)
+                   .WithMany(u => u.ReceivedMessages)
+                   .HasForeignKey(dm => dm.ReceiverId)
+                   .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<ApplicationUser>()
+                .Navigation(u => u.Posts).AutoInclude();
+
+            builder.Entity<ApplicationUser>()
+                .Navigation(u => u.PostLikes).AutoInclude();
+
+            builder.Entity<ApplicationUser>()
+                .Navigation(u => u.Comments).AutoInclude();
+
+            builder.Entity<ApplicationUser>()
+                .Navigation(u => u.Notifications).AutoInclude();
         }
     }
 }

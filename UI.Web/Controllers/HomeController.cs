@@ -103,6 +103,7 @@ namespace UI.Web.Controllers
                 Type = "Like",
                 RelatedPostId = Guid.Parse(postId)
             };
+            await notificationService.CreateNotificationAsync(notification);
             return RedirectToAction(nameof(Index));
         }
 
@@ -126,6 +127,7 @@ namespace UI.Web.Controllers
                     Type = "Comment",
                     RelatedPostId = Guid.Parse(postId)
                 };
+                await notificationService.CreateNotificationAsync(notification);
             }
             return RedirectToAction(nameof(Index));
         }
