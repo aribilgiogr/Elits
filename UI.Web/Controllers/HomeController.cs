@@ -100,7 +100,7 @@ namespace UI.Web.Controllers
             {
                 MemberId = post.MemberId,
                 Message = "Your post has been liked.",
-                Type = "Like",
+                Type = "Heart",
                 RelatedPostId = Guid.Parse(postId)
             };
             await notificationService.CreateNotificationAsync(notification);
